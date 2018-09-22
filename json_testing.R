@@ -1,0 +1,15 @@
+library(car)
+data(mtcars)
+with(mtcars, plot(mpg ~ disp))
+test_lm <- with(mtcars, lm(mpg ~ disp + wt))
+avPlots(test_lm)
+summary(test_lm)
+test_json <- serializeJSON(test_lm)
+
+write_lines(test_json, "D:/Greg/Documents/Text/lmtest.json")
+
+library(stats)
+data(LakeHuron)
+test_arima <- arima(LakeHuron, order = c(1, 1, 1))
+test_arima2 <- arima(LakeHuron, order = c(2, 0, 2))
+write_lines(serializeJSON(test_arima2), "D:/Greg/Documents/Text/arimatest.json")
