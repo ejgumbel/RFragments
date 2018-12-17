@@ -54,14 +54,19 @@ ba_typed_abvdallas <- read_csv("C:/Statistics/Generalized Gamma Experiments/ba_t
 #Data subsetting
 meso <- ba_typed_abvdallas[ba_typed_abvdallas$`Mes/Syn` == "Meso",]
 synop <- ba_typed_abvdallas[ba_typed_abvdallas$`Mes/Syn` == "Syn",]
-meso_max <- aggregate(meso, list(Year = meso$Year), max)
-synop_max <- aggregate(synop, list(Year = synop$Year), max)
-all_max <- aggregate(ba_typed_abvdallas, list(Year = ba_typed_abvdallas$Year), max)
+tsr <- ba_typed_abvdallas[ba_typed_abvdallas$GenType == "TSR",]
+mlc <- ba_typed_abvdallas[ba_typed_abvdallas$GenType == "MLC",]
+meso_max <- aggregate(BA ~ Year, meso, max)
+synop_max <- aggregate(BA ~ Year, synop, max)
+all_max <- aggregate(BA ~ Year, ba_typed_abvdallas, max)
+ba_gt_zero <- ba_typed_abvdallas[ba_typed_abvdallas$BA > 0,]
 
 #Fitting
 greg_evp(all_max$BA, max_T = 200, max_y = 1.2*max(all_max$BA))
 fit <- mle_gengamma.orig(all_max$BA)
+fit_gev <- mle_gev(all_max$BA)
 ggboot <- boot_gengamma.orig(all_max$BA, 100)
+gevboot <- boot_gev(all_max$BA, 1000)
 
 
 #b=iter(ggboot, by='row')
@@ -78,3 +83,13 @@ lines(x = rgv(pp(1:1000, name = "Gringorten")),
 points(x = rgv(pp(all_max$BA, name = "Gringorten")),
        y = sort(all_max$BA),
        pch = 18)
+
+lines(x = rgv(pp(1:1000, name = "Gringorten")),
+      y = qgev(pp(1:1000, name = "Gringorten"), fit_gev["xi"], fit_gev["alpha"], fit_gev["kappa"]),
+      lty = 1, lwd = 3)
+foreach(i = 1:nrow(gevboot), .combine = "c") %do% {
+  b = gevboot[i,]
+  lines(x = rgv(pp(1:1000, name = "Gringorten")),
+        y = qgev(pp(1:1000, name = "Gringorten"), b["xi"], b["alpha"], b["kappa"]),
+        col = "lightgrey", lty = 1, lwd = 0.5)
+}
