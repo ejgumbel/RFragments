@@ -3,10 +3,7 @@ rm(list = ls())
 library(foreach)
 library(lmom)
 
-rgv <- function(p) {
-  y <- suppressWarnings(-log(-log(p)))
-  return(y)
-}
+rgv <- function(p) suppressWarnings(-log(-log(p)))
 
 ##### Parameters #####
 gev_par <- c(xi = 3.1496,
@@ -62,6 +59,7 @@ box()
 title(xlab = "Exceedance Probability", line = 2)
 title(ylab = "GEV Quantiles", line = 2.25)
 title(main = "Bootstrap Validation")
+legend("bottomright", legend = "Extreme Value Type 1 Axis", bty = "n", cex = 0.8, text.font = 3)
 
 ##### Adding Results to Plot ######
 lines(x = rgv(exp_prob), y = pop_quants, col = "red", lwd = 2)
@@ -70,10 +68,10 @@ lines(x = rgv(upper_conf), y = pop_quants, col = "red", lwd = 1, lty = 3)
 
 ##### Legend #####
 legend("topleft", 
-       legend = c("Upper Confidence",
-                  "Expected Probability",
+       legend = c("Upper Confidence Limit",
+                  "Expected Probability Curve",
                   "Computed Frequency Curve",
-                  "Lower Confidence"),
+                  "Lower Confidence Limit"),
        lty = c(3, 1, 1, 3),
        col = c("red", "red", "black", "red"),
        lwd = c(1, 2, 2, 1))
