@@ -44,6 +44,11 @@ vls <- c(1-10^-oms[oms<3], 3, 0.5, 10^-oms) #places to add "axis" lines
 xmax <- rgv(1-10^-om) #pad the plot to the next order of magnitude
 xmin <- rgv(10^-min(2, om)) #Mirror
 
+png(filename = "D:/Statistics/Lmoment_bootstrap_valid.png",
+    width = 1200,
+    height = 800,
+    units = "px")
+
 plot(x = rgv(cdf), y = pop_quants,
      axes = F,
      xlab = "", ylab = "",
@@ -75,6 +80,8 @@ legend("topleft",
        lty = c(3, 1, 1, 3),
        col = c("red", "red", "black", "red"),
        lwd = c(1, 2, 2, 1))
+
+dev.off()
 
 ##### Create Plaintext Output #####
 output_df <- data.frame("Base_AEP" = aep,
